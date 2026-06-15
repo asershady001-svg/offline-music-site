@@ -1,4 +1,17 @@
-﻿let currentSongs=[];
+﻿
+function loadMobileFixCss(){
+  if(document.getElementById("mobileFixCss")) return;
+
+  const link = document.createElement("link");
+  link.id = "mobileFixCss";
+  link.rel = "stylesheet";
+  link.href = "mobile-fix.css?v=1";
+  document.head.appendChild(link);
+}
+
+loadMobileFixCss();
+
+let currentSongs=[];
 let currentIndex=-1;
 
 const contentArea=document.getElementById("contentArea");
@@ -360,4 +373,5 @@ function addLibraryButton(){
 
   document.body.appendChild(btn);
 }
+
 
