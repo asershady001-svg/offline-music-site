@@ -287,7 +287,11 @@ async function playFullInsidePlatform(index){
     const data = await res.json();
 
     if(data.error){
-      box.innerHTML = '<div style="padding:20px;text-align:center;">YouTube API error: ' + data.error.message + '</div>';
+      if (!navigator.onLine) {
+        box.innerHTML = '<div style="padding:20px;text-align:center;">Offline mode<br>افتح My Songs لتشغيل الأغاني المحفوظة</div>';
+      } else {
+        box.innerHTML = '<div style="padding:20px;text-align:center;">YouTube API error: ' + data.error.message + '</div>';
+      }
       return;
     }
 
@@ -314,7 +318,11 @@ async function playFullInsidePlatform(index){
 
   }catch(error){
     console.log("YouTube API error:", error);
-    box.innerHTML = '<div style="padding:20px;text-align:center;">YouTube API error. Check internet or API key.</div>';
+    if (!navigator.onLine) {
+      box.innerHTML = '<div style="padding:20px;text-align:center;">Offline mode<br>افتح My Songs لتشغيل الأغاني المحفوظة</div>';
+    } else {
+      box.innerHTML = '<div style="padding:20px;text-align:center;">YouTube API error. Check internet or API key.</div>';
+    }
   }
 }
 
@@ -373,5 +381,6 @@ function addLibraryButton(){
 
   document.body.appendChild(btn);
 }
+
 
 
