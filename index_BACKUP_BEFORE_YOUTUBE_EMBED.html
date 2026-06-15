@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Music Platform</title>
+
+  <link rel="stylesheet" href="style.css" />
+  <link rel="manifest" href="manifest.json" />
+</head>
+
+<body>
+  <div class="app">
+
+    <header class="top-bar">
+      <button class="icon-button" onclick="showSettings()">⚙</button>
+
+      <div class="tabs">
+        <button class="tab active" onclick="showHome()">Trends</button>
+        <button class="tab" onclick="showOnline()">Online</button>
+        <button class="tab" onclick="showDownloads()">Downloaded</button>
+      </div>
+
+      <button class="icon-button" onclick="showMore()">⋯</button>
+    </header>
+
+    <section class="search-area">
+      <input
+        id="searchInput"
+        type="text"
+        placeholder="ابحث عن أغنية أو مطرب..."
+        oninput="searchMusic()"
+      />
+    </section>
+
+    <section class="internet-status">
+      <span id="connectionStatus">جاري فحص الاتصال...</span>
+    </section>
+
+    <main>
+      <h2 id="pageTitle">الأغاني الرائجة</h2>
+      <div id="contentArea" class="content-area"></div>
+    </main>
+
+    <section class="player">
+      <div class="player-cover">♪</div>
+
+      <div class="player-info">
+        <div id="nowTitle">لم يتم اختيار أغنية</div>
+        <div id="nowArtist">Music Platform</div>
+      </div>
+
+      <button class="play-button" onclick="togglePlay()">▶</button>
+
+      <audio id="audioPlayer"></audio>
+    </section>
+
+    <nav class="bottom-nav">
+      <button onclick="showHome()">⌂<span>Home</span></button>
+      <button onclick="showArtists()">☷<span>Artists</span></button>
+      <button class="main-nav" onclick="togglePlay()">♪</button>
+      <button onclick="showDownloads()">▣<span>Files</span></button>
+      <button onclick="focusSearch()">⌕<span>Search</span></button>
+    </nav>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

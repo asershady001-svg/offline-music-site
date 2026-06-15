@@ -1,0 +1,782 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>موقعي للأغاني بدون إنترنت</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, Tahoma, sans-serif;
+      background: #181818;
+      color: #fff;
+      min-height: 100vh;
+      padding-bottom: 95px;
+    }
+
+    .mobile-app {
+      max-width: 480px;
+      margin: auto;
+      min-height: 100vh;
+      background: #202020;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      background: #202020;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .icon-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: none;
+      background: transparent;
+      color: #ff1768;
+      font-size: 28px;
+      cursor: pointer;
+    }
+
+    .tabs {
+      display: flex;
+      background: #343434;
+      border-radius: 12px;
+      padding: 4px;
+      gap: 4px;
+      direction: ltr;
+    }
+
+    .tab {
+      padding: 9px 18px;
+      color: #d1d1d1;
+      font-size: 18px;
+      font-weight: bold;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .tab.active {
+      background: #73737a;
+      color: white;
+    }
+
+    .search-box {
+      padding: 0 14px 12px;
+      display: none;
+    }
+
+    .search-box.show {
+      display: block;
+    }
+
+    .search-box input {
+      width: 100%;
+      border: none;
+      outline: none;
+      border-radius: 14px;
+      background: #303030;
+      color: white;
+      padding: 13px 16px;
+      font-size: 16px;
+      direction: rtl;
+    }
+
+    .page-title {
+      padding: 10px 16px;
+      color: #ff1768;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .song-list {
+      padding: 8px 10px 120px;
+    }
+
+    .song-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #303030;
+      border-radius: 14px;
+      padding: 10px;
+      margin-bottom: 12px;
+      direction: ltr;
+      cursor: pointer;
+    }
+
+    .song-card.active {
+      outline: 2px solid #ff1768;
+      background: #393939;
+    }
+
+    .cover {
+      width: 120px;
+      height: 82px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #ff9dbd, #5b5b5b);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 34px;
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    .duration {
+      position: absolute;
+      bottom: 5px;
+      right: 6px;
+      background: rgba(0,0,0,0.65);
+      color: white;
+      padding: 2px 6px;
+      border-radius: 5px;
+      font-size: 13px;
+    }
+
+    .song-info {
+      flex: 1;
+      min-width: 0;
+      direction: ltr;
+      text-align: left;
+    }
+
+    .song-title {
+      font-size: 17px;
+      font-weight: bold;
+      color: #eeeeee;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 8px;
+    }
+
+    .artist {
+      color: #ff1768;
+      font-size: 16px;
+      font-weight: bold;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .small-btn {
+      width: 42px;
+      height: 42px;
+      border: none;
+      border-radius: 50%;
+      background: #444;
+      color: #ccc;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .artist-card,
+    .category-card {
+      background: #303030;
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      direction: rtl;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .artist-name,
+    .category-name {
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .artist-count,
+    .category-count {
+      color: #ff1768;
+      font-size: 14px;
+    }
+
+    .mini-player {
+      position: fixed;
+      left: 50%;
+      bottom: 66px;
+      transform: translateX(-50%);
+      width: min(480px, 100%);
+      background: #2b2b2b;
+      padding: 10px 14px;
+      border-top: 1px solid #3b3b3b;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 30;
+      direction: ltr;
+    }
+
+    .mini-cover {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ff1768, #ff9dbd);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    .mini-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .mini-title {
+      font-size: 14px;
+      font-weight: bold;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .mini-artist {
+      font-size: 12px;
+      color: #ff1768;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    audio {
+      width: 130px;
+      height: 36px;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%);
+      width: min(480px, 100%);
+      height: 66px;
+      background: #252525;
+      border-top: 1px solid #3b3b3b;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      z-index: 40;
+      direction: ltr;
+    }
+
+    .nav-item {
+      text-align: center;
+      color: #aaa;
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .nav-item span {
+      display: block;
+      font-size: 24px;
+      margin-bottom: 3px;
+    }
+
+    .nav-item.active {
+      color: #ff1768;
+    }
+
+    .center-logo {
+      margin-top: -20px;
+    }
+
+    .center-logo span {
+      width: 58px;
+      height: 58px;
+      background: linear-gradient(135deg, #ff1768, #ff9dbd);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: auto;
+      font-size: 25px;
+      border: 3px solid #252525;
+      color: white;
+    }
+
+    .empty {
+      padding: 40px 15px;
+      text-align: center;
+      color: #aaa;
+      direction: rtl;
+      line-height: 1.8;
+    }
+
+    .hidden-file {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="mobile-app">
+
+    <div class="top-bar">
+      <button class="icon-btn" onclick="showSettings()">⚙</button>
+
+      <div class="tabs">
+        <div class="tab active" onclick="showTrends()">Trends</div>
+        <div class="tab" onclick="showRadios()">Radios</div>
+        <div class="tab" onclick="showSongs()">Songs</div>
+      </div>
+
+      <button class="icon-btn" onclick="showMore()">⋯</button>
+    </div>
+
+    <div id="searchBox" class="search-box">
+      <input id="searchInput" type="text" placeholder="ابحث عن أغنية أو مطرب..." oninput="searchSongs()" />
+    </div>
+
+    <div id="pageTitle" class="page-title">الأغاني الرائجة</div>
+
+    <div id="songList" class="song-list"></div>
+
+    <div class="mini-player">
+      <div class="mini-cover">🎵</div>
+      <div class="mini-info">
+        <div id="miniTitle" class="mini-title">اختر أغنية للتشغيل</div>
+        <div id="miniArtist" class="mini-artist">Offline Music</div>
+      </div>
+      <audio id="audioPlayer" controls></audio>
+    </div>
+
+    <div class="bottom-nav">
+      <div class="nav-item active" onclick="showTrends()">
+        <span>⌂</span>
+        TRENDS
+      </div>
+
+      <div class="nav-item" onclick="showLists()">
+        <span>☷</span>
+        LISTS
+      </div>
+
+      <div class="nav-item center-logo" onclick="togglePlay()">
+        <span id="centerPlayIcon">♪</span>
+      </div>
+
+      <div class="nav-item" onclick="openFiles()">
+        <span>▣</span>
+        FILES
+      </div>
+
+      <div class="nav-item" onclick="showSearch()">
+        <span>⌕</span>
+        SEARCH
+      </div>
+    </div>
+
+    <input id="filePicker" class="hidden-file" type="file" accept="audio/*" multiple onchange="loadLocalFiles(event)" />
+
+  </div>
+
+  <script>
+    const songs = [
+      {
+        title: "CAINT - ROCKET - HATHE ELHELWA",
+        artist: "WA7WA7",
+        file: "music/arabic/song1.mp3",
+        duration: "02:05",
+        type: "song",
+        category: "Arabic"
+      },
+      {
+        title: "Mohamed Chaker & Saad Lamjarred - El Qamar Dyali",
+        artist: "Mohamed Chaker",
+        file: "music/arabic/song2.mp3",
+        duration: "05:32",
+        type: "song",
+        category: "Arabic"
+      },
+      {
+        title: "IShowSpeed - World Cup Champions",
+        artist: "IShowSpeed",
+        file: "music/english/song1.mp3",
+        duration: "04:59",
+        type: "song",
+        category: "English"
+      },
+      {
+        title: "Arabic Radio Mix",
+        artist: "Offline Radio",
+        file: "music/radios/radio1.mp3",
+        duration: "10:00",
+        type: "radio",
+        category: "Radios"
+      }
+    ];
+
+    const famousArtists = [
+      "Amr Diab", "Tamer Hosny", "Mohamed Hamaki", "Mohamed Ramadan", "Wegz",
+      "Marwan Pablo", "Cairokee", "Sherine", "Angham", "Assala", "Nancy Ajram",
+      "Elissa", "Haifa Wehbe", "Fairuz", "Umm Kulthum", "Abdel Halim Hafez",
+      "Mohamed Abdel Wahab", "Warda", "Kadim Al Sahir", "Majid Al Mohandis",
+      "Rashed Al Majed", "Hussain Al Jassmi", "Ahlam", "Balqees", "Saad Lamjarred",
+      "Mohamed Chaker", "Hatim Ammor", "Don Bigg", "Manal", "Dizzy DROS",
+      "Taylor Swift", "The Weeknd", "Ed Sheeran", "Adele", "Drake", "Eminem",
+      "Justin Bieber", "Billie Eilish", "Ariana Grande", "Rihanna", "Beyonce",
+      "Shakira", "Dua Lipa", "Bruno Mars", "Lady Gaga", "Sia", "Coldplay",
+      "Imagine Dragons", "Maroon 5", "Michael Jackson", "Queen", "Elvis Presley",
+      "Madonna", "Whitney Houston", "Celine Dion", "One Direction", "Harry Styles",
+      "Selena Gomez", "Miley Cyrus", "Katy Perry", "Nicki Minaj", "Cardi B",
+      "Travis Scott", "Post Malone", "Kanye West", "Jay-Z", "Snoop Dogg",
+      "Tupac", "50 Cent", "Linkin Park", "Metallica", "Nirvana", "AC/DC",
+      "BTS", "Blackpink", "Jungkook", "Jimin", "PSY", "EXO", "Stray Kids",
+      "NewJeans", "TWICE", "Arijit Singh", "Atif Aslam", "Rahat Fateh Ali Khan",
+      "Shreya Ghoshal", "Sonu Nigam", "Neha Kakkar", "Luis Fonsi", "Daddy Yankee",
+      "Bad Bunny", "J Balvin", "Maluma", "Enrique Iglesias", "Rosalia", "IShowSpeed"
+    ];
+
+    let allSongs = [...songs];
+    let currentList = [...allSongs];
+    let currentIndex = -1;
+
+    const songList = document.getElementById("songList");
+    const audioPlayer = document.getElementById("audioPlayer");
+    const miniTitle = document.getElementById("miniTitle");
+    const miniArtist = document.getElementById("miniArtist");
+    const searchInput = document.getElementById("searchInput");
+    const searchBox = document.getElementById("searchBox");
+    const pageTitle = document.getElementById("pageTitle");
+    const filePicker = document.getElementById("filePicker");
+    const centerPlayIcon = document.getElementById("centerPlayIcon");
+
+    function setActiveNav(label) {
+      document.querySelectorAll(".nav-item").forEach(item => item.classList.remove("active"));
+      document.querySelectorAll(".nav-item").forEach(item => {
+        if (item.innerText.includes(label)) item.classList.add("active");
+      });
+    }
+
+    function setActiveTab(index) {
+      document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
+      document.querySelectorAll(".tab")[index].classList.add("active");
+    }
+
+    function renderSongs() {
+      songList.innerHTML = "";
+
+      if (currentList.length === 0) {
+        songList.innerHTML = `<div class="empty">لا توجد أغاني محفوظة لهذا المطرب<br>اضغط FILES واختر ملفات MP3 من جهازك</div>`;
+        return;
+      }
+
+      currentList.forEach((song, index) => {
+        const card = document.createElement("div");
+        card.className = "song-card";
+        if (index === currentIndex) card.classList.add("active");
+
+        card.onclick = () => playSong(index);
+
+        card.innerHTML = `
+          <div class="cover">
+            🎶
+            <div class="duration">${song.duration || "MP3"}</div>
+          </div>
+
+          <div class="song-info">
+            <div class="song-title">${song.title}</div>
+            <div class="artist">${song.artist}</div>
+          </div>
+
+          <div class="actions">
+            <button class="small-btn" onclick="event.stopPropagation(); alert('الأغنية يجب أن تكون موجودة على الجهاز')">⬇</button>
+            <button class="small-btn" onclick="event.stopPropagation(); alert('اسم المطرب: ${song.artist}')">⋯</button>
+          </div>
+        `;
+
+        songList.appendChild(card);
+      });
+    }
+
+    function renderArtists() {
+      songList.innerHTML = "";
+
+      const artistsFromSongs = allSongs.map(song => song.artist);
+      const mergedArtists = [...new Set([...artistsFromSongs, ...famousArtists])].sort();
+
+      mergedArtists.forEach(artist => {
+        const count = allSongs.filter(song => song.artist.toLowerCase() === artist.toLowerCase()).length;
+
+        const card = document.createElement("div");
+        card.className = "artist-card";
+        card.onclick = () => searchArtist(artist);
+
+        card.innerHTML = `
+          <div class="artist-name">${artist}</div>
+          <div class="artist-count">${count > 0 ? count + " أغنية" : "بحث"}</div>
+        `;
+
+        songList.appendChild(card);
+      });
+    }
+
+    function renderCategories() {
+      songList.innerHTML = "";
+
+      const categories = [
+        { name: "كل الأغاني", key: "all" },
+        { name: "Arabic", key: "Arabic" },
+        { name: "English", key: "English" },
+        { name: "Radios", key: "Radios" },
+        { name: "From My Files", key: "Local Files" }
+      ];
+
+      categories.forEach(cat => {
+        const count = cat.key === "all"
+          ? allSongs.length
+          : allSongs.filter(song => song.category === cat.key).length;
+
+        const card = document.createElement("div");
+        card.className = "category-card";
+        card.onclick = () => filterCategory(cat.key);
+
+        card.innerHTML = `
+          <div class="category-name">${cat.name}</div>
+          <div class="category-count">${count}</div>
+        `;
+
+        songList.appendChild(card);
+      });
+    }
+
+    function playSong(index) {
+      currentIndex = index;
+      const song = currentList[index];
+
+      audioPlayer.src = song.file;
+      miniTitle.textContent = song.title;
+      miniArtist.textContent = song.artist;
+
+      audioPlayer.play();
+      centerPlayIcon.textContent = "❚❚";
+      renderSongs();
+    }
+
+    function togglePlay() {
+      if (!audioPlayer.src && currentList.length > 0) {
+        playSong(0);
+        return;
+      }
+
+      if (audioPlayer.paused) {
+        audioPlayer.play();
+        centerPlayIcon.textContent = "❚❚";
+      } else {
+        audioPlayer.pause();
+        centerPlayIcon.textContent = "▶";
+      }
+    }
+
+    function showTrends() {
+      pageTitle.textContent = "الأغاني الرائجة";
+      searchBox.classList.remove("show");
+      searchInput.value = "";
+      setActiveNav("TRENDS");
+      setActiveTab(0);
+      currentList = [...allSongs];
+      renderSongs();
+    }
+
+    function showLists() {
+      pageTitle.textContent = "القوائم والتصنيفات";
+      searchBox.classList.remove("show");
+      setActiveNav("LISTS");
+      renderCategories();
+    }
+
+    function showRadios() {
+      pageTitle.textContent = "Radios";
+      searchBox.classList.remove("show");
+      setActiveTab(1);
+      currentList = allSongs.filter(song => song.type === "radio");
+      renderSongs();
+    }
+
+    function showSongs() {
+      pageTitle.textContent = "Songs";
+      searchBox.classList.remove("show");
+      setActiveTab(2);
+      currentList = allSongs.filter(song => song.type === "song");
+      renderSongs();
+    }
+
+    function showSearch() {
+      pageTitle.textContent = "كل المطربين";
+      searchBox.classList.add("show");
+      setActiveNav("SEARCH");
+      searchInput.focus();
+      renderArtists();
+    }
+
+    function openFiles() {
+      setActiveNav("FILES");
+      filePicker.click();
+    }
+
+    function loadLocalFiles(event) {
+      const files = Array.from(event.target.files);
+
+      files.forEach(file => {
+        const url = URL.createObjectURL(file);
+        const cleanName = file.name.replace(/\.[^/.]+$/, "");
+
+        allSongs.unshift({
+          title: cleanName,
+          artist: guessArtist(cleanName),
+          file: url,
+          duration: "MP3",
+          type: "song",
+          category: "Local Files"
+        });
+      });
+
+      pageTitle.textContent = "أغاني من جهازك";
+      searchBox.classList.remove("show");
+      currentList = allSongs.filter(song => song.category === "Local Files");
+      renderSongs();
+    }
+
+    function guessArtist(name) {
+      if (name.includes("-")) {
+        return name.split("-")[0].trim();
+      }
+      return "Unknown Artist";
+    }
+
+    function searchSongs() {
+      const keyword = searchInput.value.toLowerCase().trim();
+
+      if (keyword === "") {
+        renderArtists();
+        return;
+      }
+
+      const artistResults = famousArtists.filter(artist =>
+        artist.toLowerCase().includes(keyword)
+      );
+
+      const songResults = allSongs.filter(song =>
+        song.title.toLowerCase().includes(keyword) ||
+        song.artist.toLowerCase().includes(keyword) ||
+        song.category.toLowerCase().includes(keyword)
+      );
+
+      if (songResults.length > 0) {
+        currentList = songResults;
+        renderSongs();
+        return;
+      }
+
+      songList.innerHTML = "";
+
+      artistResults.forEach(artist => {
+        const card = document.createElement("div");
+        card.className = "artist-card";
+        card.onclick = () => searchArtist(artist);
+
+        card.innerHTML = `
+          <div class="artist-name">${artist}</div>
+          <div class="artist-count">مطرب</div>
+        `;
+
+        songList.appendChild(card);
+      });
+
+      if (artistResults.length === 0) {
+        songList.innerHTML = `<div class="empty">لا توجد نتائج</div>`;
+      }
+    }
+
+    function searchArtist(artist) {
+      searchInput.value = artist;
+
+      currentList = allSongs.filter(song =>
+        song.artist.toLowerCase().includes(artist.toLowerCase()) ||
+        song.title.toLowerCase().includes(artist.toLowerCase())
+      );
+
+      if (currentList.length === 0) {
+        songList.innerHTML = `
+          <div class="empty">
+            ${artist}<br>
+            المطرب موجود في قائمة البحث، لكن لا توجد أغاني محفوظة له على الجهاز.<br>
+            اضغط FILES وأضف أغاني MP3 لهذا المطرب.
+          </div>
+        `;
+        return;
+      }
+
+      renderSongs();
+    }
+
+    function filterCategory(category) {
+      if (category === "all") {
+        currentList = [...allSongs];
+      } else {
+        currentList = allSongs.filter(song => song.category === category);
+      }
+
+      pageTitle.textContent = category === "all" ? "كل الأغاني" : category;
+      renderSongs();
+    }
+
+    function showSettings() {
+      alert("الإعدادات سيتم تطويرها لاحقًا.");
+    }
+
+    function showMore() {
+      alert("القائمة الإضافية سيتم تطويرها لاحقًا.");
+    }
+
+    audioPlayer.addEventListener("ended", () => {
+      if (currentList.length === 0) return;
+
+      currentIndex++;
+      if (currentIndex >= currentList.length) currentIndex = 0;
+
+      playSong(currentIndex);
+    });
+
+    audioPlayer.addEventListener("pause", () => {
+      centerPlayIcon.textContent = "▶";
+    });
+
+    audioPlayer.addEventListener("play", () => {
+      centerPlayIcon.textContent = "❚❚";
+    });
+
+    renderSongs();
+  </script>
+</body>
+</html>
+
+
