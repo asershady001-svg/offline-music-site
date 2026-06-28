@@ -1,0 +1,131 @@
+﻿.platform-tabs {
+  max-width: 900px;
+  margin: 14px auto 10px;
+  padding: 8px;
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.platform-tab {
+  border: 0;
+  border-radius: 999px;
+  padding: 10px 16px;
+  background: rgba(255,255,255,0.10);
+  color: white;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.platform-tab.active {
+  background: #00e5ff;
+  color: #000;
+}
+
+.platform-loading,
+.platform-message {
+  margin: 40px auto;
+  color: white;
+  text-align: center;
+  font-size: 20px;
+}
+
+.platform-grid {
+  width: min(1100px, 96%);
+  margin: 16px auto 120px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 16px;
+}
+
+.platform-card {
+  border: 0;
+  border-radius: 18px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.10);
+  color: white;
+  text-align: left;
+  cursor: pointer;
+  padding: 0;
+}
+
+.platform-card:hover {
+  transform: translateY(-3px);
+  background: rgba(255,255,255,0.16);
+}
+
+.platform-card img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  display: block;
+}
+
+.platform-card-body {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.platform-card-body strong {
+  font-size: 15px;
+  line-height: 1.35;
+}
+
+.platform-card-body span {
+  font-size: 13px;
+  opacity: 0.75;
+}
+
+.platform-card-body small {
+  font-size: 12px;
+  opacity: 0.65;
+  text-transform: uppercase;
+}
+
+.platform-video-box {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: #111;
+  color: white;
+  padding: 16px;
+  overflow: auto;
+}
+
+.platform-video-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.platform-video-header button {
+  width: 72px;
+  height: 48px;
+  border: 0;
+  border-radius: 24px;
+  background: #444;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.platform-video-header h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.platform-video-header p {
+  margin: 4px 0 0;
+  opacity: 0.75;
+}
+
+.platform-video-box iframe {
+  width: 100%;
+  height: min(70vh, 650px);
+  border-radius: 18px;
+  background: #222;
+}

@@ -204,7 +204,9 @@ function showSettings(){
     '<div class="list-card" onclick="changeTheme(\'#facc15\')"><div class="list-title">Gold</div><div class="list-sub">Theme</div></div>';
 }
 
-function changeTheme(c){ document.documentElement.style.setProperty("--main",c); localStorage.setItem("savedThemeColor",c); }
+function changeTheme(c){
+  document.documentElement.style.setProperty("--main",c);
+}
 
 function showMore(){
   setTitle("More");
@@ -1099,7 +1101,7 @@ function addLibraryButton(){
 /* ===== AUDIO OR VIDEO MODE SELECTOR ===== */
 
 (function () {
-  let playMode = "audio"; localStorage.setItem("playMode","audio");
+  let playMode = localStorage.getItem("playMode") || "audio";
 
   function createPlayModeSelector() {
     if (document.getElementById("playModeSelector")) return;
@@ -1223,7 +1225,3 @@ function addLibraryButton(){
     });
   });
 })();
-
-window.addEventListener('load',function(){ var c=localStorage.getItem('savedThemeColor'); if(c){ document.documentElement.style.setProperty('--main',c); } });
-
-

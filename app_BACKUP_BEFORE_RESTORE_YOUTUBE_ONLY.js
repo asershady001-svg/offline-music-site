@@ -204,7 +204,9 @@ function showSettings(){
     '<div class="list-card" onclick="changeTheme(\'#facc15\')"><div class="list-title">Gold</div><div class="list-sub">Theme</div></div>';
 }
 
-function changeTheme(c){ document.documentElement.style.setProperty("--main",c); localStorage.setItem("savedThemeColor",c); }
+function changeTheme(c){
+  document.documentElement.style.setProperty("--main",c);
+}
 
 function showMore(){
   setTitle("More");
@@ -282,7 +284,7 @@ async function playFullInsidePlatform(index){
     }
 
     const videoId = data.items[0].id.videoId;
-    const embedUrl = "https://www.youtube.com/embed/" + videoId + "?autoplay=1&rel=0&playsinline=1&origin=http://localhost:5500";
+    const embedUrl = "https://www.youtube.com/embed/" + videoId + "?autoplay=1&rel=0";
 
     box.innerHTML =
       '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px;">' +
@@ -542,6 +544,8 @@ function addLibraryButton(){
       const text = (btn.textContent || "").toLowerCase();
 
       if (
+        text.includes("youtube") ||
+        text.includes("full") ||
         text.includes("mp3") ||
         text.includes("m4a")
       ) {
@@ -757,7 +761,7 @@ function addLibraryButton(){
 
       if (text.includes("mp3") || text.includes("m4a")) {
         el.style.display = "none";
-      } else if (text.includes("full")) {
+      } else if (text.includes("youtube") || text.includes("full")) {
         el.style.display = "";
       }
     });
@@ -1093,137 +1097,3 @@ function addLibraryButton(){
     });
   });
 })();
-
-
-
-/* ===== AUDIO OR VIDEO MODE SELECTOR ===== */
-
-(function () {
-  let playMode = "audio"; localStorage.setItem("playMode","audio");
-
-  function createPlayModeSelector() {
-    if (document.getElementById("playModeSelector")) return;
-
-    const box = document.createElement("div");
-    box.id = "playModeSelector";
-    box.style.position = "fixed";
-    box.style.left = "14px";
-    box.style.top = "14px";
-    box.style.zIndex = "9999";
-    box.style.display = "flex";
-    box.style.gap = "8px";
-    box.style.background = "rgba(0,0,0,0.45)";
-    box.style.padding = "8px";
-    box.style.borderRadius = "16px";
-    box.style.backdropFilter = "blur(8px)";
-
-    const audioBtn = document.createElement("button");
-    audioBtn.id = "audioModeBtn";
-    audioBtn.textContent = "Audio Only";
-    audioBtn.style.border = "0";
-    audioBtn.style.borderRadius = "12px";
-    audioBtn.style.padding = "9px 12px";
-    audioBtn.style.cursor = "pointer";
-    audioBtn.style.fontWeight = "700";
-
-    const videoBtn = document.createElement("button");
-    videoBtn.id = "videoModeBtn";
-    videoBtn.textContent = "Video Mode";
-    videoBtn.style.border = "0";
-    videoBtn.style.borderRadius = "12px";
-    videoBtn.style.padding = "9px 12px";
-    videoBtn.style.cursor = "pointer";
-    videoBtn.style.fontWeight = "700";
-
-    box.appendChild(audioBtn);
-    box.appendChild(videoBtn);
-    document.body.appendChild(box);
-
-    audioBtn.onclick = function () {
-      playMode = "audio";
-      localStorage.setItem("playMode", playMode);
-      updateModeButtons();
-      alert("Audio Only mode selected");
-    };
-
-    videoBtn.onclick = function () {
-      playMode = "video";
-      localStorage.setItem("playMode", playMode);
-      updateModeButtons();
-      alert("Video Mode selected");
-    };
-
-    updateModeButtons();
-  }
-
-  function updateModeButtons() {
-    const audioBtn = document.getElementById("audioModeBtn");
-    const videoBtn = document.getElementById("videoModeBtn");
-
-    if (!audioBtn || !videoBtn) return;
-
-    if (playMode === "audio") {
-      audioBtn.style.background = "#00e5ff";
-      audioBtn.style.color = "#000";
-      videoBtn.style.background = "#333";
-      videoBtn.style.color = "#fff";
-    } else {
-      videoBtn.style.background = "#00e5ff";
-      videoBtn.style.color = "#000";
-      audioBtn.style.background = "#333";
-      audioBtn.style.color = "#fff";
-    }
-  }
-
-  const audioOnlyPlaySong = window.playSong;
-
-  window.playSong = async function (index) {
-    if (playMode === "video") {
-      if (!navigator.onLine) {
-        alert("Video Mode يحتاج إنترنت لأن YouTube لا يعمل أوفلاين.");
-        return;
-      }
-
-      if (typeof window.playFullSong === "function") {
-        window.playFullSong(index);
-        return;
-      }
-
-      alert("YouTube player is not available.");
-      return;
-    }
-
-    if (typeof audioOnlyPlaySong === "function") {
-      return audioOnlyPlaySong(index);
-    }
-  };
-
-  function hideMp3Only() {
-    document.querySelectorAll("button, a").forEach((el) => {
-      const text = (el.textContent || "").toLowerCase();
-
-      if (text.includes("mp3") || text.includes("m4a")) {
-        el.style.display = "none";
-      }
-    });
-  }
-
-  document.addEventListener("DOMContentLoaded", function () {
-    createPlayModeSelector();
-    hideMp3Only();
-
-    const observer = new MutationObserver(function () {
-      createPlayModeSelector();
-      hideMp3Only();
-    });
-
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true
-    });
-  });
-})();
-
-window.addEventListener('load',function(){ var c=localStorage.getItem('savedThemeColor'); if(c){ document.documentElement.style.setProperty('--main',c); } });
-
-
